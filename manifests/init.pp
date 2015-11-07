@@ -16,13 +16,13 @@ define bash_user_skel(
     }
   }
 
-  if $prompt {
+  if $ps1 {
     $_ps1 = $ps1
   } else {
     if $user == "root" {
-      $_ps1 = $bash_user_skel::ps1_root
+      $_ps1 = $bash_user_skel::params::ps1_root
     } else {
-      $_ps1 = $bash_user_skel::ps1
+      $_ps1 = $bash_user_skel::params::ps1
     }
   }
 

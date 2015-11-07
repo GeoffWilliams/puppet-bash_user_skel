@@ -1,10 +1,20 @@
 define bash_user_skel(
     $user     = $title,
-    $home_dir = "/home/${title}",
+    $home_dir = false,
     $prompt   = false,
     $ps1      = false,
 ) {
   include bash_user_skel::params
+
+  if $home_dir {
+    $_home_dir = $home_dir
+  } else {
+    if $user == "root" {
+      $_home_dir = "/root"
+    } else {
+      $_home_dir = "/home/${user}"
+    }
+  }
 
   if $prompt {
     $_ps1 = $ps1
@@ -35,20 +45,20 @@ define bash_user_skel(
   # per-os files to copy
   case $os['family'] {
     "Debian": { 
-      file { "${home_dir}/.profile":
+      file { "${_home_dir}/.profile":
         source => "${file_path}/.profile",
       }
 
-      file { "${home_dir}/.Xdefaults":
+      file { "${_home_dir}/.Xdefaults":
         source => "${file_path}/.Xdefaults",
       }
 
-      file { "${home_dir}/.xscreensaver":
+      file { "${_home_dir}/.xscreensaver":
         source => "${file_path}/.xscreensaver",
       }
     }
     "RedHat": {
-      file { "${home_dir}/.bash_profile":
+      file { "${_home_dir}/.bash_profile":
         source => "${file_path}/.bash_profile",
       }
 
@@ -60,17 +70,17 @@ define bash_user_skel(
 
   # common files for all platforms
 
-  file { "${home_dir}/.bash_logout":
+  file { "${_home_dir}/.bash_logout":
     source => "${file_path}/.bash_logout",
   }
 
-  file { "${home_dir}/.bashrc":
+  file { "${_home_dir}/.bashrc":
     source => "${file_path}/.bashrc",
   }
 
-  file { "${home_dir}/.bash_custom": }
+  file { "${_home_dir}/.bash_custom": }
 
-  file { "${home_dir}/.bash_system": 
+  file { "${_home_dir}/.bash_system": 
     content => template("${module_name}/.bash_system.erb"),
   }
 

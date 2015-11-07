@@ -1,0 +1,14 @@
+{
+  "name": "geoffwilliams-bash_user_skel",
+  "version": "0.1.0",
+  "author": "geoffwilliams",
+  "summary": "copy the expected skeleton files into a user's homedir",
+  "license": "Apache-2.0",
+  "source": "https://github.com/GeoffWilliams/puppet-bash_user_skel",
+  "project_page": "https://github.com/GeoffWilliams/puppet-bash_user_skel",
+  "issues_url": "https://github.com/GeoffWilliams/puppet-bash_user_skel/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+

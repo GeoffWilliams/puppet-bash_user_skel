@@ -32,6 +32,34 @@ define bash_user_skel(
 
   $file_path = "puppet:///modules/${module_name}/${os['family']}"
 
+  # per-os files to copy
+  case $os['family'] {
+    "Debian": { 
+      file { "${home_dir}/.profile":
+        source => "${file_path}/.profile",
+      }
+
+      file { "${home_dir}/.Xdefaults":
+        source => "${file_path}/.Xdefaults",
+      }
+
+      file { "${home_dir}/.xscreensaver":
+        source => "${file_path}/.xscreensaver",
+      }
+    }
+    "RedHat": {
+      file { "${home_dir}/.bash_profile":
+        source => "${file_path}/.bash_profile",
+      }
+
+    }
+    default: { 
+      notify { "${module_name} does not support ${os['family']}": }
+    }
+  }
+
+  # common files for all platforms
+
   file { "${home_dir}/.bash_logout":
     source => "${file_path}/.bash_logout",
   }
@@ -40,22 +68,10 @@ define bash_user_skel(
     source => "${file_path}/.bashrc",
   }
 
-  file { "${home_dir}/.profile":
-    source => "${file_path}/.profile",
-  }
-
-  file { "${home_dir}/.Xdefaults":
-    source => "${file_path}/.Xdefaults",
-  }
-
-  file { "${home_dir}/.xscreensaver":
-    source => "${file_path}/.xscreensaver",
-  }
-
   file { "${home_dir}/.bash_custom": }
 
   file { "${home_dir}/.bash_system": 
-    content => template(""),
+    content => template("${module_name}/.bash_system.erb"),
   }
 
 }

@@ -1,8 +1,24 @@
+# bash_user_skel
+# ==============
+# Install customised dotfiles in user home directories
+#
+# Parameters
+# ----------
+# [*user*]
+#   user we are managing files for.  Defaults to $title
+# [*home_dir*]
+#   home directory of user we are managing files for.  Defaults to /home/$user
+# [*ps1*]
+#   Provide a customised $PS1 prompt.  By default we have a coloured prompt
+#   with user, host and directory in it.
+# [*aliases*]
+#   Provide an array of bash aliases to give to this user.  The default is to
+#   give a nicer version of ls with colouring, file type and size
 define bash_user_skel(
     $user     = $title,
     $home_dir = false,
-    $prompt   = false,
     $ps1      = false,
+    $aliases  = false,
 ) {
   include bash_user_skel::params
 
@@ -27,7 +43,7 @@ define bash_user_skel(
   }
 
   if $aliases {
-    $_aliases = $aliases
+    $_aliases = any2array($aliases)
   } else {
     $_aliases = $bash_user_skel::params::aliases
   }

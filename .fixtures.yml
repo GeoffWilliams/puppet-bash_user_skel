@@ -1,0 +1,3 @@
+fixtures:
+  symlinks:
+    'bash_user_skel': '#{source_dir}'

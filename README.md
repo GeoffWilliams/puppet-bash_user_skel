@@ -15,65 +15,63 @@
 
 ## Overview
 
-A one-maybe-two sentence summary of what the module does/what problem it solves.
-This is your 30 second elevator pitch for your module. Consider including
-OS/Puppet version it works with.
+Populate a sysadmin's home directory with a set of consistent luxury bash configuration files.  Files content is determined by this module rather then copying files already on the target system to ensure consistency.
 
 ## Module Description
+Provides:
+* A pretty shell prompt for regular users and a red one for anyone logging in as root
+* A colourful `ls` command showing sizes
+* Enforced consistency (replaces `~/.bashrc`)
+* Extension point for local changes (`~/.bash_custom`)
+* An easy way of fully setting up a local user with Puppet
+* Method to distribute custom aliases and prompts to required users
 
-If applicable, this section should have a brief description of the technology
-the module integrates with and what that integration enables. This section
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?"
-
-If your module has a range of functionality (installation, configuration,
-management, etc.) this is the time to mention it.
 
 ## Setup
 
 ### What bash_user_skel affects
 
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form.
+* Creates various dotfiles in the the user home directory, mirroring those in `/etc/skel`
+* Since `~/.bashrc` is managed by Puppet, we provide a means for users to add custom unmanaged code to their shell session by editing `~/.bash_custom`
 
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
 
 ### Beginning with bash_user_skel
 
-The very basic steps needed for a user to get the module up and running.
+The module provides a single defined resource type `bash_user_skel` which needs to be applied for each user you want configure.  If your happy to accept the default prompt and alias settings, all you need is:
 
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you may wish to include an additional section here: Upgrading
-(For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
+```puppet
+bash_user_skel { "username": }
+```
+
+Where `username` is the username you wish to apply the settings to.  If you have a small list of users its probably easiest to keep this in hiera and feed the list to the defined resource type, otherwise for larger lists you could look towards a facter based solution or integration with LDAP.
+
+The default settings assume a home directory under `/home`.
 
 ## Usage
 
-Put the classes, types, and resources for customizing, configuring, and doing
-the fancy stuff with your module here.
+In cases where you would like to supply different prompts and aliases, or your user has an unusual home directory, you can configure this via the `bash_user_skel` resource's parameters:
+
+```puppet
+bash_user_skel( "frank_furter":
+    $home_dir = "/exports/users/frank_furter",
+    $ps1      = "$",
+    $aliases  = [
+     "ll='/bin/ls -l'",
+     "ld='/bin/ls -ld'",
+    ],
+) {
+```
+
+In this case, we have a custom home directory, a simplified prompt of just `$` and a couple of aliases for `ls`.
 
 ## Reference
 
-Here, list the classes, types, providers, facts, etc contained in your module.
-This section should include all of the under-the-hood workings of your module so
-people know what the module is touching on their system but don't need to mess
-with things. (We are working on automating this section!)
+* `bash_user_skel` - Install customised dotfiles in user home directories
 
 ## Limitations
 
-This is where you list OS compatibility, version compatibility, etc.
+Only Debian and Ubuntu support right now.  Should be easy to add other Unix like OS's
 
 ## Development
 
-Since your module is awesome, other users will want to play with it. Let them
-know what the ground rules for contributing are.
-
-## Release Notes/Contributors/Etc **Optional**
-
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You may also add any additional sections you feel are
-necessary or important to include here. Please use the `## ` header.
+PRs accepted

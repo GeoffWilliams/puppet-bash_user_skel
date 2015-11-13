@@ -1,4 +1,5 @@
 # bash_user_skel
+https://travis-ci.org/GeoffWilliams/puppet-bash_user_skel.svg
 
 #### Table of Contents
 

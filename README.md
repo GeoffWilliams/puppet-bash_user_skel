@@ -1,5 +1,5 @@
 # bash_user_skel
-https://travis-ci.org/GeoffWilliams/puppet-bash_user_skel.svg
+[![Build Status](https://travis-ci.org/GeoffWilliams/puppet-bash_user_skel.svg)](https://travis-ci.org/GeoffWilliams/puppet-bash_user_skel)
 
 #### Table of Contents
 
